@@ -1,0 +1,72 @@
+#This script removes cueing sound from production recordings. 
+#Script simply highlights 0 to .75s, removes it, and saves the new file
+
+
+
+####### Input form
+form Input parameters
+        comment Replace "xxx" with your diretories info. Note your platform's syntax:
+        comment PC directories are often "C:\...\"; Mac directories are often "/Users/.../".
+        comment Do not forget the final slash!
+	comment Using mac? (check if yes)
+	boolean mac 0 
+	sentence MainPipelineDirectory C:\Users\anarc\Documents\PerceptionProductionStudy\data_pipeline
+	sentence ParticipantID ER5
+        comment Manually inspect F0 for corrections?
+        boolean inspect 0 
+endform
+Erase all
+
+clearinfo
+
+
+####### Settings
+## create directory paths
+os_slash$ = "\"
+if mac
+	os_slash$="/"
+endif
+
+inDirAudio$ = "'MainPipelineDirectory$''os_slash$'raw'os_slash$''ParticipantID$''os_slash$'original'os_slash$'"
+outDirAudio$ = "'MainPipelineDirectory$''os_slash$'raw'os_slash$''ParticipantID$''os_slash$'"
+
+## list files
+Create Strings as file list: "soundFileObj",  "'inDirAudio$'*.weba"
+number_of_files = Get number of strings
+for i from 1 to number_of_files
+	start = 0.01
+	end = 0.75
+
+	selectObject: "Strings soundFileObj"
+	current_file$ = Get string: 'i'
+	name_prefix$ = current_file$ - ".weba"
+	sound = Read from file: "'inDirAudio$''current_file$'"
+
+
+##
+## create output weba file
+outputWEBA$= "'outDirAudio$''current_file$'"
+
+
+start = Get nearest zero crossing: 1, start
+end = Get nearest zero crossing: 1, end
+sound_end = Get total duration
+
+before = Extract part: 0, start, "rectangular", 1, "no"
+selectObject: sound
+after  = Extract part: end, sound_end, "rectangular", 1, "no"
+selectObject: before, after
+new = Concatenate
+removeObject: before, after
+
+Save as WAV file: outputWEBA$
+
+
+## finish and clear  
+  select all
+    minusObject: "Strings soundFileObj"
+    Remove
+
+endfor
+select all
+Remove

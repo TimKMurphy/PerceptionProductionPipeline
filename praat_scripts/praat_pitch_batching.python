@@ -1,0 +1,13 @@
+import os
+
+folders=os.listdir("C:\\Users\\anarc\\Documents\\PerceptionProductionStudy\\data_pipeline\\raw\\")
+folders.remove("pilot")
+
+
+praat_path = "C:\\Users\\anarc\\Documents\\Praat.exe"
+script_path = "C:\\Users\\anarc\\Documents\\PerceptionProductionStudy\\data_pipeline\\praat_scripts\\dual_pitch_measures_batch.praat"
+arg1 = "\"C:\\Users\\anarc\\Documents\\PerceptionProductionStudy\\data_pipeline\""
+
+for i in folders:
+	arg2 = "\""+ i +"\""
+	os.system(praat_path + " --run " + script_path + " " + arg1 + " " + arg2)

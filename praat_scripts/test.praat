@@ -1,0 +1,1 @@
+runScript: "C:\Users\anarc\Documents\PerceptionProductionStudy\data_pipeline\praat_scripts\dual_pitch_measures_batch.praat", "C:\Users\anarc\Documents\PerceptionProductionStudy\data_pipeline\raw", "8ac9d"
